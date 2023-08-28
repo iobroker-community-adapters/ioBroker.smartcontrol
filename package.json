@@ -26,7 +26,7 @@
   },
   "dependencies": {
     "axios": "^0.27.2",
-    "@iobroker/adapter-core": "^2.6.8",
+    "@iobroker/adapter-core": "^3.0.3",
     "@types/jquery": "^3.5.17",
     "cheerio": "^1.0.0-rc.12",
     "node-schedule": "^2.1.1",

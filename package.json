@@ -25,7 +25,7 @@
     "url": "https://github.com/iobroker-community-adapters/ioBroker.smartcontrol"
   },
   "dependencies": {
-    "axios": "^0.27.2",
+    "axios": "^1.5.0",
     "@iobroker/adapter-core": "^2.6.8",
     "@types/jquery": "^3.5.18",
     "cheerio": "^1.0.0-rc.12",

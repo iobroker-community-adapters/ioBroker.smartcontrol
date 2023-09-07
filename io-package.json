@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "smartcontrol",
-    "version": "1.3.2",
+    "version": "2.0.0",
     "news": {
+      "2.0.0": {
+        "en": "warn log for not existing objects removed (fixed)\nupdated readme\nsupported only node 16 or higher\nupdated packages",
+        "de": "warnen log für nicht vorhandene objekte entfernt (fixiert)\naktualisierte version\nunterstützt nur knoten 16 oder höher\naktualisierte pakete",
+        "ru": "предупредить лог для не существующих объектов (фиксированных)\nобновленный readme\nподдерживается только нод 16 или выше\nобновленные пакеты",
+        "pt": "aviso log para objetos não existentes removidos (fixados)\nreadme atualizado\nsuportado apenas o nó 16 ou superior\npacotes atualizados",
+        "nl": "een waarschuwingslog voor het niet bestaan van objecten verwijderd\nvertaling:\n_\nvertaling:",
+        "fr": "avertir le journal pour les objets non existants enlevés (fixés)\nmise à jour\nsupporté seulement node 16 ou supérieur\npaquets mis à jour",
+        "it": "avvertire log per non oggetti esistenti rimossi (fisso)\naggiornato\nsupportato solo nodo 16 o superiore\npacchetti aggiornati",
+        "es": "registro de advertencia para objetos no existentes eliminados (fijo)\nreadme actualizado\nnodo 16 o superior\npaquetes actualizados",
+        "pl": "ostrzegać przed nieistniejącymi obiektami (usunięte)\nuaktualniać\nwęzeł 16 lub więcej\npakiet aktualizowany",
+        "uk": "попередити журнал для невикористаних предметів (фіксовано)\nоновлений зчитувач\nпідтримується тільки вершина 16 або вище\nоновлені пакети",
+        "zh-cn": "现有物品(固定)的停战逻辑\n更新\n仅支助16或更高职等\n更新的一揽子方案"
+      },
       "1.3.2": {
         "en": "#19 problem with any web request solved\n#18 my contact added",
         "de": "#19 problem mit jeder web-anfrage gelöst\n#18 mein kontakt hinzugefügt",
@@ -78,18 +91,6 @@
         "es": "Solución: problema n. ° 60: problemas relacionados con los activadores de los sensores de movimiento; Varias mejoras de código; Los problemas n. ° 35 y n. ° 43 se confirmaron como resueltos, por lo tanto, se eliminó todo el código de solución.",
         "pl": "Poprawka: problem # 60 - Problem z połączonymi wyzwalaczami czujników ruchu; Kilka ulepszeń kodu; Potwierdzono, że problemy 35 i 43 zostały rozwiązane, w związku z czym usunięto cały kod obejścia",
         "zh-cn": "修复：问题60-运动传感器的链接触发器问题；几处代码改进；问题＃35和＃43确认已解决，因此删除了所有解决方法代码"
-      },
-      "1.1.1": {
-        "en": "Fix: Most likely finally fixes issue #43 as well as workaround for issue #35",
-        "de": "Fix: Behebt höchstwahrscheinlich endlich Issue 43 sowie Workaround für Issue 35",
-        "ru": "Исправление: Скорее всего, наконец, исправлена проблема № 43, а также решение проблемы № 35.",
-        "pt": "Correção: provavelmente, finalmente corrige o problema nº 43, bem como uma solução alternativa para o problema nº 35",
-        "nl": "Oplossing: lost waarschijnlijk eindelijk probleem # 43 op, evenals een tijdelijke oplossing voor probleem # 35",
-        "fr": "Correctif: corrige très probablement finalement le problème n ° 43 ainsi que la solution de contournement pour le problème n ° 35",
-        "it": "Correzione: molto probabilmente risolve finalmente il problema # 43 e la soluzione alternativa per il problema # 35",
-        "es": "Solución: lo más probable es que finalmente solucione el problema # 43, así como una solución para el problema # 35",
-        "pl": "Poprawka: najprawdopodobniej ostatecznie rozwiązuje problem nr 43, a także obejście problemu nr 35",
-        "zh-cn": "修复：最有可能最终解决了问题43和问题35的解决方法"
       }
     },
     "titleLang": {

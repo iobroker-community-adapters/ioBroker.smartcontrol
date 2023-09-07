@@ -79,7 +79,7 @@ We welcome contributions and collaboration from the community to continue enhanc
     Placeholder for the next version (at the beginning of the line):
     ### **WORK IN PROGRESS**
 -->
-### **WORK IN PROGRESS**
+### 2.0.0 (2023-09-07)
 * (oelison) warn log for not existing objects removed (fixed)
 * (inkade) updated readme
 * (bluefox) supported only node 16 or higher

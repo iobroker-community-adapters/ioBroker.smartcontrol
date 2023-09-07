@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "smartcontrol",
-    "version": "2.0.0",
+    "version": "2.0.1",
     "news": {
+      "2.0.1": {
+        "en": "warn log for not existing objects removed (fixed)\nupdated readme\nsupported only node 16 or higher\nupdated packages",
+        "de": "warnen log für nicht vorhandene objekte entfernt (fixiert)\naktualisierte version\nunterstützt nur knoten 16 oder höher\naktualisierte pakete",
+        "ru": "предупредить лог для не существующих объектов (фиксированных)\nобновленный readme\nподдерживается только нод 16 или выше\nобновленные пакеты",
+        "pt": "aviso log para objetos não existentes removidos (fixados)\nreadme atualizado\nsuportado apenas o nó 16 ou superior\npacotes atualizados",
+        "nl": "een waarschuwingslog voor het niet bestaan van objecten verwijderd\nvertaling:\n_\nvertaling:",
+        "fr": "avertir le journal pour les objets non existants enlevés (fixés)\nmise à jour\nsupporté seulement node 16 ou supérieur\npaquets mis à jour",
+        "it": "avvertire log per non oggetti esistenti rimossi (fisso)\naggiornato\nsupportato solo nodo 16 o superiore\npacchetti aggiornati",
+        "es": "registro de advertencia para objetos no existentes eliminados (fijo)\nreadme actualizado\nnodo 16 o superior\npaquetes actualizados",
+        "pl": "ostrzegać przed nieistniejącymi obiektami (usunięte)\nuaktualniać\nwęzeł 16 lub więcej\npakiet aktualizowany",
+        "uk": "попередити журнал для невикористаних предметів (фіксовано)\nоновлений зчитувач\nпідтримується тільки вершина 16 або вище\nоновлені пакети",
+        "zh-cn": "现有物品(固定)的停战逻辑\n更新\n仅支助16或更高职等\n更新的一揽子方案"
+      },
       "1.3.2": {
         "en": "#19 problem with any web request solved\n#18 my contact added",
         "de": "#19 problem mit jeder web-anfrage gelöst\n#18 mein kontakt hinzugefügt",

@@ -142,6 +142,7 @@
     "extIcon": "https://raw.githubusercontent.com/iobroker-community-adapters/ioBroker.smartcontrol/master/admin/smartcontrol.png",
     "readme": "https://github.com/iobroker-community-adapters/ioBroker.smartcontrol/blob/master/README.md",
     "loglevel": "info",
+    "tier": 2,
     "mode": "daemon",
     "type": "logic",
     "compact": true,

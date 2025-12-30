@@ -119,7 +119,8 @@
     },
     "authors": [
       "oelison <iobrokersmartcontrol(at)sciphy.de",
-      "Mic-M <iob.micm@gmail.com>"
+      "Mic-M <iob.micm@gmail.com>",
+      "iobroker-community-adapters <iobroker-community-adapters@gmx.de>"
     ],
     "keywords": [
       "smart",
@@ -151,14 +152,19 @@
     "messagebox": true,
     "dependencies": [
       {
-        "js-controller": ">=3.3.22"
+        "js-controller": ">=6.0.11"
       }
     ],
     "plugins": {
       "sentry": {
         "dsn": "https://5a01dc9b29b846218064c49700c7a302@sentry.iobroker.net/94"
       }
-    }
+    },
+    "globalDependencies": [
+      {
+        "admin": ">=7.6.17"
+      }
+    ]
   },
   "native": {
     "fixNightNightEnd": true,

@@ -2,10 +2,10 @@
   "name": "iobroker.smartcontrol",
   "version": "2.0.1",
   "description": "Control devices smarter: by grouping, including triggers like motion, opening window, etc. and set target devices accordingly",
-  "author": {
-    "name": "Mic-M",
-    "email": "iob.micm@gmail.com"
-  },
+  "author": "Mic-M <iob.micm@gmail.com>",
+  "contributors": [
+    "iobroker-community-adapters <iobroker-community-adapters@gmx.de>"
+  ],
   "homepage": "https://github.com/iobroker-community-adapters/ioBroker.smartcontrol",
   "license": "MIT",
   "keywords": [

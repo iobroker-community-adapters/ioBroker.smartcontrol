@@ -361,6 +361,8 @@ Change Log for 0.2.0:
 ### 0.0.3
 * (Mic-M) release for very early testers
 
+[Older changelogs can be found there](CHANGELOG_OLD.md)
+
 ## License
 MIT License
 

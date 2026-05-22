@@ -81,6 +81,7 @@ We welcome contributions and collaboration from the community to continue enhanc
 -->
 
 ### **WORK IN PROGRESS**
+- (@mcm1957) **ENHANCED**: Migrated adapter admin configuration to jsonConfig with short-form i18n files and removed legacy Materialize admin files.
 - (iobroker-bot) Adapter requires node.js >= 20 now.
 - (copilot) Adapter requires admin >= 7.7.22 now
 - (copilot) Adapter requires js-controller >= 6.0.11 now

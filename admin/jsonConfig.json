@@ -1,0 +1,293 @@
+{
+  "i18n": true,
+  "type": "tabs",
+  "items": {
+    "targets": {
+      "type": "panel",
+      "label": "Target devices",
+      "items": {
+        "tableTargetDevices": {
+          "type": "table",
+          "label": "Target devices: objects",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12,
+          "clone": "name",
+          "items": [
+            { "type": "checkbox", "attr": "active", "title": "on", "width": "5%", "filter": false, "sort": false, "default": true },
+            { "type": "text", "attr": "name", "title": "Device Name", "width": "12%", "default": "" },
+            { "type": "objectId", "attr": "onState", "title": "State to switch device on", "width": "20%", "default": "" },
+            { "type": "text", "attr": "onValue", "title": "Value for 'on'", "width": "10%", "default": "" },
+            { "type": "checkbox", "attr": "noTargetOnCheck", "title": "Do not verify", "width": "7%", "default": false },
+            { "type": "objectId", "attr": "offState", "title": "State to switch device off", "width": "20%", "default": "" },
+            { "type": "text", "attr": "offValue", "title": "Value for 'off'", "width": "10%", "default": "" },
+            { "type": "text", "attr": "onAfter", "title": "Second(s)", "width": "8%", "default": "" },
+            { "type": "checkbox", "attr": "noTargetOffCheck", "title": "Do not verify", "width": "8%", "default": false }
+          ]
+        },
+        "tableTargetEnums": {
+          "type": "table",
+          "label": "Targets: Enum functions",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12,
+          "clone": "name",
+          "items": [
+            { "type": "checkbox", "attr": "active", "title": "on", "width": "5%", "filter": false, "sort": false, "default": true },
+            { "type": "text", "attr": "name", "title": "Name", "width": "14%", "default": "" },
+            { "type": "text", "attr": "enumId", "title": "Enum Function Name", "width": "14%", "default": "" },
+            { "type": "chips", "attr": "enumRooms", "title": "Limit to rooms", "width": "18%", "default": [] },
+            { "type": "text", "attr": "onValue", "title": "Value for 'on'", "width": "11%", "default": "" },
+            { "type": "checkbox", "attr": "noTargetOnCheck", "title": "Do not verify", "width": "7%", "default": false },
+            { "type": "text", "attr": "offValue", "title": "Value for 'off'", "width": "11%", "default": "" },
+            { "type": "checkbox", "attr": "noTargetOffCheck", "title": "Do not verify", "width": "7%", "default": false }
+          ]
+        },
+        "tableTargetURLs": {
+          "type": "table",
+          "label": "Targets: URLs",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12,
+          "clone": "name",
+          "items": [
+            { "type": "checkbox", "attr": "active", "title": "on", "width": "5%", "filter": false, "sort": false, "default": true },
+            { "type": "text", "attr": "name", "title": "Name", "width": "20%", "default": "" },
+            { "type": "text", "attr": "urlOn", "title": "URL for switching on", "width": "35%", "default": "" },
+            { "type": "text", "attr": "urlOff", "title": "URL for switching off", "width": "35%", "default": "" }
+          ]
+        }
+      }
+    },
+    "conditions": {
+      "type": "panel",
+      "label": "Additional conditions",
+      "items": {
+        "tableConditions": {
+          "type": "table",
+          "label": "Additional conditions",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12,
+          "clone": "name",
+          "items": [
+            { "type": "checkbox", "attr": "active", "title": "on", "width": "5%", "filter": false, "sort": false, "default": true },
+            { "type": "text", "attr": "name", "title": "Name of condition", "width": "20%", "default": "" },
+            { "type": "objectId", "attr": "conditionState", "title": "State of condition", "width": "45%", "default": "" },
+            { "type": "text", "attr": "conditionValue", "title": "State value", "width": "25%", "default": "" }
+          ]
+        }
+      }
+    },
+    "triggers": {
+      "type": "panel",
+      "label": "Triggers",
+      "items": {
+        "tableTriggerMotion": {
+          "type": "table",
+          "label": "Motion sensors",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12,
+          "clone": "name",
+          "items": [
+            { "type": "checkbox", "attr": "active", "title": "on", "width": "5%", "filter": false, "sort": false, "default": true },
+            { "type": "text", "attr": "name", "title": "Name of motion sensor", "width": "12%", "default": "" },
+            { "type": "objectId", "attr": "stateId", "title": "State of motion sensor", "width": "20%", "default": "" },
+            { "type": "text", "attr": "stateVal", "title": "State value", "width": "8%", "default": "true" },
+            { "type": "text", "attr": "duration", "title": "Sec", "width": "6%", "default": "" },
+            { "type": "checkbox", "attr": "notIfManual", "title": "Never switch if...", "width": "7%", "default": false },
+            { "type": "objectId", "attr": "briStateId", "title": "State of brightness", "width": "15%", "default": "" },
+            { "type": "text", "attr": "briThreshold", "title": "Threshold", "width": "7%", "default": "" },
+            { "type": "chips", "attr": "motionLinkedTrigger", "title": "Linked triggers", "width": "12%", "default": [] },
+            { "type": "text", "attr": "motionLinkedDuration", "title": "Second(s)", "width": "6%", "default": "" },
+            { "type": "checkbox", "attr": "ignoreMotionOn", "title": "Do not verify", "width": "6%", "default": false }
+          ]
+        },
+        "tableTriggerDevices": {
+          "type": "table",
+          "label": "Other triggers",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12,
+          "clone": "name",
+          "items": [
+            { "type": "checkbox", "attr": "active", "title": "on", "width": "5%", "filter": false, "sort": false, "default": true },
+            { "type": "text", "attr": "name", "title": "Name", "width": "16%", "default": "" },
+            { "type": "checkbox", "attr": "userState", "title": "State under", "width": "6%", "default": false },
+            { "type": "objectId", "attr": "stateId", "title": "State", "width": "30%", "default": "" },
+            { "type": "text", "attr": "stateVal", "title": "State value", "width": "13%", "default": "" },
+            { "type": "checkbox", "attr": "targetOff", "title": "Target off", "width": "10%", "default": false },
+            { "type": "checkbox", "attr": "isToggle", "title": "Toggle", "width": "10%", "default": false }
+          ]
+        },
+        "tableTriggerTimes": {
+          "type": "table",
+          "label": "Time based triggers",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12,
+          "clone": "name",
+          "items": [
+            { "type": "checkbox", "attr": "active", "title": "on", "width": "5%", "filter": false, "sort": false, "default": true },
+            { "type": "text", "attr": "name", "title": "Name of trigger", "width": "14%", "default": "" },
+            { "type": "text", "attr": "time", "title": "Time", "width": "14%", "default": "" },
+            { "type": "chips", "attr": "additionalConditions", "title": "Additional conditions", "width": "16%", "default": [] },
+            { "type": "checkbox", "attr": "additionalConditionsAll", "title": "Always", "width": "7%", "default": false },
+            { "type": "chips", "attr": "never", "title": "Never if...", "width": "16%", "default": [] },
+            { "type": "checkbox", "attr": "neverAll", "title": "Always", "width": "7%", "default": false },
+            { "type": "checkbox", "attr": "targetOff", "title": "Target off", "width": "10%", "default": false }
+          ]
+        }
+      }
+    },
+    "zones": {
+      "type": "panel",
+      "label": "Zones",
+      "items": {
+        "tableZones": {
+          "type": "table",
+          "label": "Zones",
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12,
+          "clone": "name",
+          "items": [
+            { "type": "checkbox", "attr": "active", "title": "on", "width": "5%", "filter": false, "sort": false, "default": true },
+            { "type": "text", "attr": "name", "title": "Name of zone", "width": "12%", "default": "" },
+            { "type": "chips", "attr": "triggers", "title": "Triggers", "width": "14%", "default": [] },
+            { "type": "chips", "attr": "targets", "title": "Target devices", "width": "14%", "default": [] },
+            { "type": "text", "attr": "onAfter", "title": "Second(s)", "width": "7%", "default": "" },
+            { "type": "text", "attr": "offAfter", "title": "Off after x sec", "width": "8%", "default": "" },
+            { "type": "chips", "attr": "neverOff", "title": "Never switch off if...", "width": "14%", "default": [] },
+            { "type": "checkbox", "attr": "neverOffAll", "title": "Always", "width": "6%", "default": false },
+            { "type": "checkbox", "attr": "executeAlways", "title": "Execute always", "width": "6%", "default": false },
+            { "type": "jsonEditor", "attr": "executionJson", "title": "Execution", "width": "7%", "default": "" },
+            { "type": "jsonEditor", "attr": "targetsOverwrite", "title": "overwrite options", "width": "7%", "default": {} },
+            { "type": "text", "attr": "infoText", "title": "Informational note to the object", "width": "10%", "default": "" }
+          ]
+        }
+      }
+    },
+    "options": {
+      "type": "panel",
+      "label": "Further Adapter Options",
+      "items": {
+        "motionIgnoreBriIfZoneOn": {
+          "type": "checkbox",
+          "label": "tabOptions.notVerifyBriHeader",
+          "help": "tabOptions.notVerifyBriInfo",
+          "xs": 12,
+          "sm": 12,
+          "md": 6,
+          "lg": 6,
+          "xl": 6
+        },
+        "fixNightNightEnd": {
+          "type": "checkbox",
+          "label": "tabOptions.nightEndOpt",
+          "help": "tabOptions.nightEndInfo",
+          "newLine": true,
+          "xs": 12,
+          "sm": 12,
+          "md": 6,
+          "lg": 6,
+          "xl": 6
+        },
+        "triggerStatesAck": {
+          "type": "select",
+          "label": "tabOptions.triggerAckHeader",
+          "help": "tabOptions.triggerAckInfo",
+          "newLine": true,
+          "xs": 12,
+          "sm": 12,
+          "md": 6,
+          "lg": 6,
+          "xl": 6,
+          "options": [
+            { "label": "tabOptions.triggerAckOptFalse", "value": "false" },
+            { "label": "tabOptions.triggerAckOptTrue", "value": "true" },
+            { "label": "tabOptions.triggerAckOptAny", "value": "any" }
+          ]
+        },
+        "limitTriggerInterval": {
+          "type": "text",
+          "label": "tabOptions.triggerLimitLabel",
+          "help": "tabOptions.triggerLimitInfo",
+          "xs": 12,
+          "sm": 12,
+          "md": 4,
+          "lg": 4,
+          "xl": 4
+        },
+        "jsonMaxEntries": {
+          "type": "text",
+          "label": "Number of entries in JSON states (0-500)",
+          "help": "tabOptions.jsonMaxEntriesInfo",
+          "newLine": true,
+          "xs": 12,
+          "sm": 12,
+          "md": 4,
+          "lg": 4,
+          "xl": 4
+        },
+        "extendedInfoLog": {
+          "type": "checkbox",
+          "label": "tabOptions.extendedLogHeader",
+          "help": "tabOptions.extendedLogInfo",
+          "xs": 12,
+          "sm": 12,
+          "md": 6,
+          "lg": 6,
+          "xl": 6
+        },
+        "validateDeactivatedRows": {
+          "type": "checkbox",
+          "label": "tabOptions.inputValidationHeader",
+          "help": "tabOptions.inputValidationInfo",
+          "newLine": true,
+          "xs": 12,
+          "sm": 12,
+          "md": 6,
+          "lg": 6,
+          "xl": 6
+        },
+        "fancy-filter-input": {
+          "type": "text",
+          "hidden": true,
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        },
+        "executeZoneAlways": {
+          "type": "checkbox",
+          "label": "Execute always",
+          "hidden": true,
+          "xs": 12,
+          "sm": 12,
+          "md": 12,
+          "lg": 12,
+          "xl": 12
+        }
+      }
+    }
+  }
+}

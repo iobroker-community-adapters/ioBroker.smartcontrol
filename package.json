@@ -30,7 +30,7 @@
   "dependencies": {
     "@iobroker/adapter-core": "^3.1.6",
     "@types/jquery": "^3.5.32",
-    "axios": "^1.6.8",
+    "axios": "^1.17.0",
     "cheerio": "^1.0.0-rc.12",
     "node-schedule": "^2.1.1",
     "suncalc2": "^1.8.1"

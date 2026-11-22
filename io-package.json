@@ -1,23 +1,11 @@
 {
   "common": {
     "name": "smartcontrol",
-    "version": "2.0.5",
+    "version": "2.0.2",
     "news": {
-      "2.0.5": {
-        "en": "Admin: force light markdown when page background is light",
-        "de": "Admin: helles Markdown bei hellem Seitenhintergrund"
-      },
-      "2.0.4": {
-        "en": "Admin: light/dark help via page background + md-theme marker",
-        "de": "Admin: Hilfe Hell/Dunkel über Seitenhintergrund und md-theme"
-      },
-      "2.0.3": {
-        "en": "Admin: fix light mode help text (dark theme detection)",
-        "de": "Admin: Hilfetext im Hellmodus wieder lesbar (Theme-Erkennung)"
-      },
       "2.0.2": {
-        "en": "Admin: help markdown readable in dark mode (Issue #5)",
-        "de": "Admin: Hilfetext-Markdown im Dunkelmodus lesbar (Issue #5)"
+        "en": "Admin: help markdown readable in light and dark ioBroker themes (fixes #5)",
+        "de": "Admin: Hilfetext-Markdown in hellem und dunklem Admin-Theme lesbar (behebt #5)"
       },
       "2.0.1": {
         "en": "warn log for not existing objects removed (fixed)\nupdated readme\nsupported only node 16 or higher\nupdated packages",

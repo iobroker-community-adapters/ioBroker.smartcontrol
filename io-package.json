@@ -1,8 +1,12 @@
 {
   "common": {
     "name": "smartcontrol",
-    "version": "2.0.2",
+    "version": "2.0.3",
     "news": {
+      "2.0.3": {
+        "en": "Admin: fix light mode help text (dark theme detection)",
+        "de": "Admin: Hilfetext im Hellmodus wieder lesbar (Theme-Erkennung)"
+      },
       "2.0.2": {
         "en": "Admin: help markdown readable in dark mode (Issue #5)",
         "de": "Admin: Hilfetext-Markdown im Dunkelmodus lesbar (Issue #5)"

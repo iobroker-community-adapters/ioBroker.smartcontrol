@@ -82,44 +82,32 @@ function load (settings, onChange) { /*eslint-disable-line no-unused-vars*/
 
 
 /**
- * Dunkelmodus im Admin erkennen (React-Theme, URL-Parameter, helle Hintergrundfarbe).
+ * Dunkelmodus im Admin – nur echte Theme-Klassen / URL (kein Luminanz-Fallback:
+ * transparent = rgba(0,0,0,0) wurde fälschlich als „dunkel“ erkannt → Hellmodus kaputt).
  */
 function isAdminDarkTheme() {
-    const loc = `${window.location.search}&${window.location.hash}`;
-    if (/[?&#]react=(dark|blue|modernDark|NW|HA)\b/i.test(loc)) {
-        return true;
-    }
-    const nodes = [
-        document.querySelector('.adapter-container'),
-        document.querySelector('.m.adapter-container'),
-        document.body,
-        document.documentElement,
-    ];
-    for (const el of nodes) {
-        if (!el) {
-            continue;
+    const root = document.querySelector('.adapter-container');
+    if (root) {
+        if (
+            root.classList.contains('react-light') ||
+            root.classList.contains('react-colored')
+        ) {
+            return false;
         }
         if (
-            el.classList.contains('react-dark') ||
-            el.classList.contains('react-blue') ||
-            el.classList.contains('dark')
+            root.classList.contains('react-dark') ||
+            root.classList.contains('react-blue')
         ) {
             return true;
         }
     }
-    const probe = document.querySelector('.adapter-container') || document.body;
-    if (probe) {
-        const bg = getComputedStyle(probe).backgroundColor;
-        const parts = bg && bg.match(/[\d.]+/g);
-        if (parts && parts.length >= 3) {
-            const lum =
-                0.299 * Number(parts[0]) +
-                0.587 * Number(parts[1]) +
-                0.114 * Number(parts[2]);
-            if (lum < 96) {
-                return true;
-            }
-        }
+
+    const loc = `${window.location.search}&${window.location.hash}`;
+    if (/[?&#]react=(light|colored)\b/i.test(loc)) {
+        return false;
+    }
+    if (/[?&#]react=(dark|blue|modernDark|NW|HA)\b/i.test(loc)) {
+        return true;
     }
     return false;
 }

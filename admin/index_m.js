@@ -82,34 +82,60 @@ function load (settings, onChange) { /*eslint-disable-line no-unused-vars*/
 
 
 /**
- * Dunkelmodus im Admin – nur echte Theme-Klassen / URL (kein Luminanz-Fallback:
- * transparent = rgba(0,0,0,0) wurde fälschlich als „dunkel“ erkannt → Hellmodus kaputt).
+ * Hintergrundhelligkeit der sichtbaren Seite (nur opake Farben – kein rgba(0,0,0,0)).
+ */
+function pageBackgroundLuminance() {
+    const page = document.querySelector('.adapter-container .page') || document.querySelector('.page');
+    if (!page) {
+        return null;
+    }
+    const bg = getComputedStyle(page).backgroundColor;
+    const m = bg && bg.match(
+        /rgba?\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)(?:\s*,\s*([\d.]+))?\s*\)/,
+    );
+    if (!m) {
+        return null;
+    }
+    const alpha = m[4] !== undefined ? parseFloat(m[4]) : 1;
+    if (alpha < 0.05) {
+        return null;
+    }
+    return 0.299 * +m[1] + 0.587 * +m[2] + 0.114 * +m[3];
+}
+
+/**
+ * Markdown hell/dunkel: zuerst sichtbarer Seiten-Hintergrund (Theme-Wechsel ohne Reload),
+ * sonst react-*-Klasse (URL nicht nutzen – oft noch „react=dark“ obwohl Hellmodus aktiv).
  */
 function isAdminDarkTheme() {
+    const lum = pageBackgroundLuminance();
+    if (lum !== null) {
+        return lum < 128;
+    }
+    const root = document.querySelector('.adapter-container');
+    return !!(
+        root &&
+        (root.classList.contains('react-dark') || root.classList.contains('react-blue'))
+    );
+}
+
+/** Steuert style.css für Klapp-Hilfen (react-dark-Klasse kann nach Theme-Wechsel hängen bleiben). */
+function syncMarkdownThemeMarker(adminIsDark) {
     const root = document.querySelector('.adapter-container');
     if (root) {
-        if (
-            root.classList.contains('react-light') ||
-            root.classList.contains('react-colored')
-        ) {
-            return false;
-        }
-        if (
-            root.classList.contains('react-dark') ||
-            root.classList.contains('react-blue')
-        ) {
-            return true;
-        }
+        root.setAttribute('data-smartcontrol-md-theme', adminIsDark ? 'dark' : 'light');
     }
+}
 
-    const loc = `${window.location.search}&${window.location.hash}`;
-    if (/[?&#]react=(light|colored)\b/i.test(loc)) {
-        return false;
+function clearZeroMdStylesheetCache() {
+    if (!window.ZeroMd || !window.ZeroMd.cache) {
+        return;
     }
-    if (/[?&#]react=(dark|blue|modernDark|NW|HA)\b/i.test(loc)) {
-        return true;
-    }
-    return false;
+    Object.keys(window.ZeroMd.cache).forEach((key) => {
+        if (key.includes('github-markdown')) {
+            delete window.ZeroMd.cache[key];
+        }
+    });
 }
 
 /**
@@ -126,18 +152,22 @@ function applyZeroMdTheme(mdEl, adminIsDark) {
             st.remove();
         }
     }
+    clearZeroMdStylesheetCache();
+    const themeTag = adminIsDark ? 'dark' : 'light';
     const cssUrls = adminIsDark
-        ? ['https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown-dark.min.css']
-        : ['https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css'];
+        ? [`https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown-dark.min.css?sc=${themeTag}`]
+        : [`https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css?sc=${themeTag}`];
     mdEl.setAttribute('css-urls', JSON.stringify(cssUrls));
 
     const onRendered = () => {
         mdEl.removeEventListener('zero-md-rendered', onRendered);
-        if (!adminIsDark || !mdEl.shadowRoot) {
+        if (!mdEl.shadowRoot) {
             return;
         }
+        mdEl.shadowRoot.querySelectorAll('style.smartcontrol-md-extra').forEach((el) => el.remove());
         const extra = document.createElement('style');
-        extra.textContent = ZERO_MD_DARK_SHADOW_STYLE;
+        extra.className = 'smartcontrol-md-extra';
+        extra.textContent = adminIsDark ? ZERO_MD_DARK_SHADOW_STYLE : ZERO_MD_LIGHT_SHADOW_STYLE;
         mdEl.shadowRoot.appendChild(extra);
     };
     mdEl.addEventListener('zero-md-rendered', onRendered);
@@ -171,6 +201,31 @@ const ZERO_MD_DARK_SHADOW_STYLE = `
 }
 `;
 
+/** Hellmodus: erzwingt lesbare GitHub-Markdown-Farben im Shadow DOM */
+const ZERO_MD_LIGHT_SHADOW_STYLE = `
+.markdown-body {
+    color-scheme: light;
+    background-color: #ffffff !important;
+    color: #1f2328 !important;
+}
+.markdown-body p,
+.markdown-body li,
+.markdown-body td,
+.markdown-body th {
+    color: #1f2328 !important;
+}
+.markdown-body th {
+    background-color: #f6f8fa !important;
+}
+.markdown-body a {
+    color: #0969da !important;
+}
+.markdown-body code {
+    background-color: rgba(175, 184, 193, 0.2) !important;
+    color: #1f2328 !important;
+}
+`;
+
 function load2(settings, onChange) { 
     // Adapter Settings
     if (!settings) return;
@@ -187,10 +242,7 @@ function load2(settings, onChange) {
     const mdIds = $('zero-md[manual-render]').map((i, el) => el.getAttribute('id')).get(); // https://stackoverflow.com/a/54392415
 
     const adminIsDark = isAdminDarkTheme();
-    document.querySelector('.adapter-container')?.setAttribute(
-        'data-smartcontrol-md-dark',
-        adminIsDark ? '1' : '0',
-    );
+    syncMarkdownThemeMarker(adminIsDark);
 
     for (const mdId of mdIds) {
         const mdEl = document.querySelector('zero-md#' + mdId);
@@ -236,6 +288,7 @@ function load2(settings, onChange) {
         function () {
             setTimeout(() => {
                 const dark = isAdminDarkTheme();
+                syncMarkdownThemeMarker(dark);
                 $(this).siblings('.collapsible-body').find('zero-md[manual-render]').each(function () {
                     applyZeroMdTheme(this, dark);
                     this.render();

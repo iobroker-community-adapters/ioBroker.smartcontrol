@@ -40,32 +40,51 @@
     background-color: #272727 !important;
 }
 
-/* Help texts (?): zero-md uses github-markdown (light) by default — see index_m.js css-urls in dark themes */
+/* Hilfe (?): Theme über data-smartcontrol-md-theme (index_m.js), nicht nur react-dark (hängt oft fest) */
+.m[data-smartcontrol-md-theme="light"] .collapsible-body {
+    background-color: #fafafa !important;
+    color: rgba(0, 0, 0, 0.87) !important;
+}
+.m[data-smartcontrol-md-theme="light"] .collapsible-body p,
+.m[data-smartcontrol-md-theme="light"] .collapsible-body li,
+.m[data-smartcontrol-md-theme="light"] .collapsible-body ol {
+    color: rgba(0, 0, 0, 0.87) !important;
+}
+.m[data-smartcontrol-md-theme="light"] .collapsible-body td:nth-child(1) {
+    color: #0d47a1 !important;
+}
+.m[data-smartcontrol-md-theme="dark"] .collapsible-body,
 .m.react-dark .collapsible-body,
 .m.react-blue .collapsible-body {
     background-color: #303030;
     color: rgba(255, 255, 255, 0.87);
 }
+.m[data-smartcontrol-md-theme="dark"] .collapsible-body th,
 .m.react-dark .collapsible-body th,
 .m.react-blue .collapsible-body th {
     background-color: #424242;
     color: rgba(255, 255, 255, 0.87);
 }
+.m[data-smartcontrol-md-theme="dark"] .collapsible-body td:nth-child(1),
 .m.react-dark .collapsible-body td:nth-child(1),
 .m.react-blue .collapsible-body td:nth-child(1) {
     color: #90caf9;
 }
+.m[data-smartcontrol-md-theme="dark"] .collapsible-body a:link,
+.m[data-smartcontrol-md-theme="dark"] .collapsible-body a:visited,
 .m.react-dark .collapsible-body a:link,
 .m.react-dark .collapsible-body a:visited,
 .m.react-blue .collapsible-body a:link,
 .m.react-blue .collapsible-body a:visited {
     color: #64b5f6;
 }
+.m[data-smartcontrol-md-theme="dark"] .collapsible-body code,
 .m.react-dark .collapsible-body code,
 .m.react-blue .collapsible-body code {
     color: #81d4fa;
     background-color: rgba(255, 255, 255, 0.08);
 }
+.m[data-smartcontrol-md-theme="dark"] p.translation-required,
 .m.react-dark p.translation-required,
 .m.react-blue p.translation-required {
     color: #90caf9;
@@ -139,16 +158,21 @@ code { padding: 2px 4px; font-size: 1.05em !important; color: #2696ef; backgroun
 .collapsible-body table {font-size: 1.0em;}
 .collapsible-body th {background-color: #c8e4fa69;}
 
-/* Dunkelmodus: helle Tabellenfarben oben überschreiben (Hilfe außerhalb/zero-md-Rand) */
+/* Dunkelmodus: helle Tabellenfarben oben überschreiben (nur bei md-theme=dark) */
+.m[data-smartcontrol-md-theme="dark"] .collapsible-body td:nth-child(1),
 .m.react-dark .collapsible-body td:nth-child(1),
 .m.react-blue .collapsible-body td:nth-child(1) {
     color: #90caf9 !important;
 }
+.m[data-smartcontrol-md-theme="dark"] .collapsible-body th,
 .m.react-dark .collapsible-body th,
 .m.react-blue .collapsible-body th {
     background-color: #424242 !important;
     color: rgba(255, 255, 255, 0.87) !important;
 }
+.m[data-smartcontrol-md-theme="dark"] .collapsible-body p,
+.m[data-smartcontrol-md-theme="dark"] .collapsible-body li,
+.m[data-smartcontrol-md-theme="dark"] .collapsible-body ol,
 .m.react-dark .collapsible-body p,
 .m.react-blue .collapsible-body p,
 .m.react-dark .collapsible-body li,

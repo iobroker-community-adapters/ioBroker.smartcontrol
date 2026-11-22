@@ -29,15 +29,47 @@
 .m .row .col.m1 { width: 14%; } 
 #tab-area { padding-left:0;padding-right:0; margin-top: 0px; margin-bottom: 1px; background-color:#174475; box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2) }
 
-/* Tabs menu react-dark */
-.m.react-dark .tabs .tab a.active, .m .tabs .tab a:hover { color: #2196f3; }
-.m.react-dark .tabs { background-color: #272727 !important;}
-.m.react-dark .md-import { background-color: #E0EBF3; color:yellow !important;}
+/* Tabs menu react-dark / react-blue */
+.m.react-dark .tabs .tab a.active,
+.m.react-blue .tabs .tab a.active,
+.m .tabs .tab a:hover {
+    color: #2196f3;
+}
+.m.react-dark .tabs,
+.m.react-blue .tabs {
+    background-color: #272727 !important;
+}
 
-/* Tabs menu react-blue */
-.m.react-blue .tabs .tab a.active, .m .tabs .tab a:hover { color: #2196f3; }
-.m.react-blue .tabs { background-color: #272727 !important;}
-.m.react-blue .md-import { background-color: #E0EBF3; color:yellow !important;}
+/* Help texts (?): zero-md uses github-markdown (light) by default — see index_m.js css-urls in dark themes */
+.m.react-dark .collapsible-body,
+.m.react-blue .collapsible-body {
+    background-color: #303030;
+    color: rgba(255, 255, 255, 0.87);
+}
+.m.react-dark .collapsible-body th,
+.m.react-blue .collapsible-body th {
+    background-color: #424242;
+    color: rgba(255, 255, 255, 0.87);
+}
+.m.react-dark .collapsible-body td:nth-child(1),
+.m.react-blue .collapsible-body td:nth-child(1) {
+    color: #90caf9;
+}
+.m.react-dark .collapsible-body a:link,
+.m.react-dark .collapsible-body a:visited,
+.m.react-blue .collapsible-body a:link,
+.m.react-blue .collapsible-body a:visited {
+    color: #64b5f6;
+}
+.m.react-dark .collapsible-body code,
+.m.react-blue .collapsible-body code {
+    color: #81d4fa;
+    background-color: rgba(255, 255, 255, 0.08);
+}
+.m.react-dark p.translation-required,
+.m.react-blue p.translation-required {
+    color: #90caf9;
+}
 
 /* Table header */
 table.table-values th.header { background-color:#64BfF6; font-size:90%; text-align:center; line-height: 1em; padding:6px 2px;}

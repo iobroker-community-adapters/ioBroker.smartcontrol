@@ -95,7 +95,20 @@ function load2(settings, onChange) {
 
     // index_m.html: All ids defined in <zero-md> tags, like ['md-start', 'md-targetDevices', ...]
     const mdIds = $('zero-md[manual-render]').map((i, el) => el.getAttribute('id')).get(); // https://stackoverflow.com/a/54392415
+
+    // Admin dark/blue theme: use GitHub markdown dark stylesheet inside zero-md shadow DOM (help texts at ?)
+    const adminRoot = document.querySelector('.m');
+    const adminIsDark =
+        adminRoot &&
+        (adminRoot.classList.contains('react-dark') || adminRoot.classList.contains('react-blue'));
+    const zeroMdCssUrls = JSON.stringify(
+        adminIsDark
+            ? ['https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown-dark.min.css']
+            : ['https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css'],
+    );
+
     for (const mdId of mdIds) {
+        $('zero-md#' + mdId).attr('css-urls', zeroMdCssUrls);
 
         const mdFilePath = $('zero-md#' + mdId).attr('src'); // like 'doc-md/start_en.md'
         if (mdFilePath) {

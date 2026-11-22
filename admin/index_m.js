@@ -82,14 +82,9 @@ function load (settings, onChange) { /*eslint-disable-line no-unused-vars*/
 
 
 /**
- * Hintergrundhelligkeit der sichtbaren Seite (nur opake Farben – kein rgba(0,0,0,0)).
+ * Helligkeit einer CSS-Hintergrundfarbe (nur opak, kein transparent).
  */
-function pageBackgroundLuminance() {
-    const page = document.querySelector('.adapter-container .page') || document.querySelector('.page');
-    if (!page) {
-        return null;
-    }
-    const bg = getComputedStyle(page).backgroundColor;
+function luminanceFromCssColor(bg) {
     const m = bg && bg.match(
         /rgba?\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)(?:\s*,\s*([\d.]+))?\s*\)/,
     );
@@ -103,16 +98,46 @@ function pageBackgroundLuminance() {
     return 0.299 * +m[1] + 0.587 * +m[2] + 0.114 * +m[3];
 }
 
+/** Hellster sichtbarer Tab-Hintergrund (versteckte Tabs ignorieren). */
+function pageBackgroundLuminance() {
+    let brightest = null;
+    const pages = document.querySelectorAll('.adapter-container .page, .page');
+    pages.forEach((page) => {
+        const style = getComputedStyle(page);
+        if (style.display === 'none' || style.visibility === 'hidden') {
+            return;
+        }
+        const lum = luminanceFromCssColor(style.backgroundColor);
+        if (lum !== null && (brightest === null || lum > brightest)) {
+            brightest = lum;
+        }
+    });
+    if (brightest !== null) {
+        return brightest;
+    }
+    return luminanceFromCssColor(getComputedStyle(document.body).backgroundColor);
+}
+
 /**
- * Markdown hell/dunkel: zuerst sichtbarer Seiten-Hintergrund (Theme-Wechsel ohne Reload),
- * sonst react-*-Klasse (URL nicht nutzen – oft noch „react=dark“ obwohl Hellmodus aktiv).
+ * Markdown hell/dunkel: heller sichtbarer Hintergrund schlägt hängende react-dark-Klasse.
  */
 function isAdminDarkTheme() {
-    const lum = pageBackgroundLuminance();
-    if (lum !== null) {
-        return lum < 128;
-    }
     const root = document.querySelector('.adapter-container');
+    if (
+        root &&
+        (root.classList.contains('react-light') || root.classList.contains('react-colored'))
+    ) {
+        return false;
+    }
+
+    const lum = pageBackgroundLuminance();
+    if (lum !== null && lum >= 140) {
+        return false;
+    }
+    if (lum !== null && lum < 90) {
+        return true;
+    }
+
     return !!(
         root &&
         (root.classList.contains('react-dark') || root.classList.contains('react-blue'))
@@ -201,7 +226,7 @@ const ZERO_MD_DARK_SHADOW_STYLE = `
 }
 `;
 
-/** Hellmodus: erzwingt lesbare GitHub-Markdown-Farben im Shadow DOM */
+/** Hellmodus: überschreibt auch Reste von github-markdown-dark (dunkle Tabellenzeilen) */
 const ZERO_MD_LIGHT_SHADOW_STYLE = `
 .markdown-body {
     color-scheme: light;
@@ -211,8 +236,19 @@ const ZERO_MD_LIGHT_SHADOW_STYLE = `
 .markdown-body p,
 .markdown-body li,
 .markdown-body td,
-.markdown-body th {
+.markdown-body th,
+.markdown-body strong {
     color: #1f2328 !important;
+}
+.markdown-body table,
+.markdown-body table tr,
+.markdown-body table td,
+.markdown-body table th {
+    background-color: #ffffff !important;
+    border-color: #d0d7de !important;
+}
+.markdown-body table tr:nth-child(2n) td {
+    background-color: #f6f8fa !important;
 }
 .markdown-body th {
     background-color: #f6f8fa !important;

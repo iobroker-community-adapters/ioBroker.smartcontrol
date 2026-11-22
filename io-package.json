@@ -1,8 +1,12 @@
 {
   "common": {
     "name": "smartcontrol",
-    "version": "2.0.4",
+    "version": "2.0.5",
     "news": {
+      "2.0.5": {
+        "en": "Admin: force light markdown when page background is light",
+        "de": "Admin: helles Markdown bei hellem Seitenhintergrund"
+      },
       "2.0.4": {
         "en": "Admin: light/dark help via page background + md-theme marker",
         "de": "Admin: Hilfe Hell/Dunkel über Seitenhintergrund und md-theme"

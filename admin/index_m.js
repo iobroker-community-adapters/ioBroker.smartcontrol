@@ -81,6 +81,58 @@ function load (settings, onChange) { /*eslint-disable-line no-unused-vars*/
 }
 
 
+/**
+ * Dunkelmodus im Admin: Theme-Klasse sitzt auf `.adapter-container` (nicht auf jedem `.m`).
+ */
+function isAdminDarkTheme() {
+    const nodes = [
+        document.querySelector('.adapter-container'),
+        document.querySelector('.m.adapter-container'),
+        document.body,
+    ];
+    for (const el of nodes) {
+        if (!el) {
+            continue;
+        }
+        if (
+            el.classList.contains('react-dark') ||
+            el.classList.contains('react-blue') ||
+            el.classList.contains('dark')
+        ) {
+            return true;
+        }
+    }
+    return false;
+}
+
+/** Zusatz-CSS im zero-md Shadow DOM, falls das GitHub-Dark-Sheet nicht alles trifft */
+const ZERO_MD_DARK_SHADOW_STYLE = `
+.markdown-body {
+    color-scheme: dark;
+    background-color: transparent !important;
+    color: #e6edf3 !important;
+}
+.markdown-body p,
+.markdown-body li,
+.markdown-body td,
+.markdown-body th {
+    color: #e6edf3 !important;
+}
+.markdown-body table tr {
+    background-color: transparent !important;
+}
+.markdown-body th {
+    background-color: #21262d !important;
+}
+.markdown-body a {
+    color: #58a6ff !important;
+}
+.markdown-body code {
+    background-color: rgba(110, 118, 129, 0.35) !important;
+    color: #e6edf3 !important;
+}
+`;
+
 function load2(settings, onChange) { 
     // Adapter Settings
     if (!settings) return;
@@ -97,10 +149,7 @@ function load2(settings, onChange) {
     const mdIds = $('zero-md[manual-render]').map((i, el) => el.getAttribute('id')).get(); // https://stackoverflow.com/a/54392415
 
     // Admin dark/blue theme: use GitHub markdown dark stylesheet inside zero-md shadow DOM (help texts at ?)
-    const adminRoot = document.querySelector('.m');
-    const adminIsDark =
-        adminRoot &&
-        (adminRoot.classList.contains('react-dark') || adminRoot.classList.contains('react-blue'));
+    const adminIsDark = isAdminDarkTheme();
     const zeroMdCssUrls = JSON.stringify(
         adminIsDark
             ? ['https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown-dark.min.css']
@@ -108,7 +157,14 @@ function load2(settings, onChange) {
     );
 
     for (const mdId of mdIds) {
-        $('zero-md#' + mdId).attr('css-urls', zeroMdCssUrls);
+        const $zeroMd = $('zero-md#' + mdId);
+        $zeroMd.attr('css-urls', zeroMdCssUrls);
+        if (adminIsDark) {
+            const $tpl = $zeroMd.find('template');
+            if ($tpl.length) {
+                $tpl.html(`<style>${ZERO_MD_DARK_SHADOW_STYLE}</style>`);
+            }
+        }
 
         const mdFilePath = $('zero-md#' + mdId).attr('src'); // like 'doc-md/start_en.md'
         if (mdFilePath) {

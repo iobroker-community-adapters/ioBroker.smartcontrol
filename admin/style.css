@@ -118,6 +118,12 @@ code { padding: 2px 4px; font-size: 1.05em !important; color: #2696ef; backgroun
 .page a:visited { color:#2696ef; } /* visited link */
 .page a:hover { text-decoration: underline; } /* mouse over link */
 .page a:active { color: #0d47a1; } /* selected link */
+.m.react-dark .page a:link,
+.m.react-blue .page a:link,
+.m.react-dark .page a:visited,
+.m.react-blue .page a:visited {
+    color: #64b5f6;
+}
 
 /* ****** collapsible sections ****** */
 /* collapsible: general ****** */
@@ -132,6 +138,25 @@ code { padding: 2px 4px; font-size: 1.05em !important; color: #2696ef; backgroun
 .collapsible-body td:nth-child(1) { font-weight:normal; color: #0d47a1; width: 200px; } /* Format first column */
 .collapsible-body table {font-size: 1.0em;}
 .collapsible-body th {background-color: #c8e4fa69;}
+
+/* Dunkelmodus: helle Tabellenfarben oben überschreiben (Hilfe außerhalb/zero-md-Rand) */
+.m.react-dark .collapsible-body td:nth-child(1),
+.m.react-blue .collapsible-body td:nth-child(1) {
+    color: #90caf9 !important;
+}
+.m.react-dark .collapsible-body th,
+.m.react-blue .collapsible-body th {
+    background-color: #424242 !important;
+    color: rgba(255, 255, 255, 0.87) !important;
+}
+.m.react-dark .collapsible-body p,
+.m.react-blue .collapsible-body p,
+.m.react-dark .collapsible-body li,
+.m.react-blue .collapsible-body li,
+.m.react-dark .collapsible-body ol,
+.m.react-blue .collapsible-body ol {
+    color: rgba(255, 255, 255, 0.87);
+}
 
 /* collapsible: Config Table Header/Documentation ****** */
 .collapsible-header.config-section    { background-color: #174475 !important; }

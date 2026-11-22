@@ -82,13 +82,18 @@ function load (settings, onChange) { /*eslint-disable-line no-unused-vars*/
 
 
 /**
- * Dunkelmodus im Admin: Theme-Klasse sitzt auf `.adapter-container` (nicht auf jedem `.m`).
+ * Dunkelmodus im Admin erkennen (React-Theme, URL-Parameter, helle Hintergrundfarbe).
  */
 function isAdminDarkTheme() {
+    const loc = `${window.location.search}&${window.location.hash}`;
+    if (/[?&#]react=(dark|blue|modernDark|NW|HA)\b/i.test(loc)) {
+        return true;
+    }
     const nodes = [
         document.querySelector('.adapter-container'),
         document.querySelector('.m.adapter-container'),
         document.body,
+        document.documentElement,
     ];
     for (const el of nodes) {
         if (!el) {
@@ -102,7 +107,52 @@ function isAdminDarkTheme() {
             return true;
         }
     }
+    const probe = document.querySelector('.adapter-container') || document.body;
+    if (probe) {
+        const bg = getComputedStyle(probe).backgroundColor;
+        const parts = bg && bg.match(/[\d.]+/g);
+        if (parts && parts.length >= 3) {
+            const lum =
+                0.299 * Number(parts[0]) +
+                0.587 * Number(parts[1]) +
+                0.114 * Number(parts[2]);
+            if (lum < 96) {
+                return true;
+            }
+        }
+    }
     return false;
+}
+
+/**
+ * zero-md lädt css-urls nur, wenn KEIN <template><style> gesetzt ist (siehe zero-md render).
+ */
+function applyZeroMdTheme(mdEl, adminIsDark) {
+    if (!mdEl) {
+        return;
+    }
+    const tpl = mdEl.querySelector('template');
+    if (tpl) {
+        const st = tpl.content.querySelector('style');
+        if (st) {
+            st.remove();
+        }
+    }
+    const cssUrls = adminIsDark
+        ? ['https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown-dark.min.css']
+        : ['https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css'];
+    mdEl.setAttribute('css-urls', JSON.stringify(cssUrls));
+
+    const onRendered = () => {
+        mdEl.removeEventListener('zero-md-rendered', onRendered);
+        if (!adminIsDark || !mdEl.shadowRoot) {
+            return;
+        }
+        const extra = document.createElement('style');
+        extra.textContent = ZERO_MD_DARK_SHADOW_STYLE;
+        mdEl.shadowRoot.appendChild(extra);
+    };
+    mdEl.addEventListener('zero-md-rendered', onRendered);
 }
 
 /** Zusatz-CSS im zero-md Shadow DOM, falls das GitHub-Dark-Sheet nicht alles trifft */
@@ -148,23 +198,15 @@ function load2(settings, onChange) {
     // index_m.html: All ids defined in <zero-md> tags, like ['md-start', 'md-targetDevices', ...]
     const mdIds = $('zero-md[manual-render]').map((i, el) => el.getAttribute('id')).get(); // https://stackoverflow.com/a/54392415
 
-    // Admin dark/blue theme: use GitHub markdown dark stylesheet inside zero-md shadow DOM (help texts at ?)
     const adminIsDark = isAdminDarkTheme();
-    const zeroMdCssUrls = JSON.stringify(
-        adminIsDark
-            ? ['https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown-dark.min.css']
-            : ['https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css'],
+    document.querySelector('.adapter-container')?.setAttribute(
+        'data-smartcontrol-md-dark',
+        adminIsDark ? '1' : '0',
     );
 
     for (const mdId of mdIds) {
-        const $zeroMd = $('zero-md#' + mdId);
-        $zeroMd.attr('css-urls', zeroMdCssUrls);
-        if (adminIsDark) {
-            const $tpl = $zeroMd.find('template');
-            if ($tpl.length) {
-                $tpl.html(`<style>${ZERO_MD_DARK_SHADOW_STYLE}</style>`);
-            }
-        }
+        const mdEl = document.querySelector('zero-md#' + mdId);
+        applyZeroMdTheme(mdEl, adminIsDark);
 
         const mdFilePath = $('zero-md#' + mdId).attr('src'); // like 'doc-md/start_en.md'
         if (mdFilePath) {
@@ -190,13 +232,29 @@ function load2(settings, onChange) {
         }
 
         // Finally, render zero-md - https://github.com/zerodevx/zero-md#public-methods
-        // We add a slight delay, just in case
         setTimeout(() => {
             const el = document.querySelector('zero-md#' + mdId);
-            if(el) el.render();
+            if (el) {
+                applyZeroMdTheme(el, adminIsDark);
+                el.render();
+            }
         }, 100);
-
     }
+
+    // Hilfe neu rendern, wenn Klappbereich aufgeht (Materialize-Collapsible)
+    $('.collapsible').off('click.smartcontrolMd', '.collapsible-header').on(
+        'click.smartcontrolMd',
+        '.collapsible-header',
+        function () {
+            setTimeout(() => {
+                const dark = isAdminDarkTheme();
+                $(this).siblings('.collapsible-body').find('zero-md[manual-render]').each(function () {
+                    applyZeroMdTheme(this, dark);
+                    this.render();
+                });
+            }, 350);
+        },
+    );
 
     /**
      * tableTargetEnums: set enum room and function names to drop down (multiple select) fields

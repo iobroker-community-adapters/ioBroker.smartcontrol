@@ -1,8 +1,12 @@
 {
   "common": {
     "name": "smartcontrol",
-    "version": "2.0.1",
+    "version": "2.0.2",
     "news": {
+      "2.0.2": {
+        "en": "Admin: help markdown readable in dark mode (Issue #5)",
+        "de": "Admin: Hilfetext-Markdown im Dunkelmodus lesbar (Issue #5)"
+      },
       "2.0.1": {
         "en": "warn log for not existing objects removed (fixed)\nupdated readme\nsupported only node 16 or higher\nupdated packages",
         "de": "warnen log für nicht vorhandene objekte entfernt (fixiert)\naktualisierte version\nunterstützt nur knoten 16 oder höher\naktualisierte pakete",

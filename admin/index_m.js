@@ -81,6 +81,187 @@ function load (settings, onChange) { /*eslint-disable-line no-unused-vars*/
 }
 
 
+/**
+ * Helligkeit einer CSS-Hintergrundfarbe (nur opak, kein transparent).
+ */
+function luminanceFromCssColor(bg) {
+    const m = bg && bg.match(
+        /rgba?\(\s*([\d.]+)\s*,\s*([\d.]+)\s*,\s*([\d.]+)(?:\s*,\s*([\d.]+))?\s*\)/,
+    );
+    if (!m) {
+        return null;
+    }
+    const alpha = m[4] !== undefined ? parseFloat(m[4]) : 1;
+    if (alpha < 0.05) {
+        return null;
+    }
+    return 0.299 * +m[1] + 0.587 * +m[2] + 0.114 * +m[3];
+}
+
+/** Hellster sichtbarer Tab-Hintergrund (versteckte Tabs ignorieren). */
+function pageBackgroundLuminance() {
+    let brightest = null;
+    const pages = document.querySelectorAll('.adapter-container .page, .page');
+    pages.forEach((page) => {
+        const style = getComputedStyle(page);
+        if (style.display === 'none' || style.visibility === 'hidden') {
+            return;
+        }
+        const lum = luminanceFromCssColor(style.backgroundColor);
+        if (lum !== null && (brightest === null || lum > brightest)) {
+            brightest = lum;
+        }
+    });
+    if (brightest !== null) {
+        return brightest;
+    }
+    return luminanceFromCssColor(getComputedStyle(document.body).backgroundColor);
+}
+
+/**
+ * Markdown hell/dunkel: heller sichtbarer Hintergrund schlägt hängende react-dark-Klasse.
+ */
+function isAdminDarkTheme() {
+    const root = document.querySelector('.adapter-container');
+    if (
+        root &&
+        (root.classList.contains('react-light') || root.classList.contains('react-colored'))
+    ) {
+        return false;
+    }
+
+    const lum = pageBackgroundLuminance();
+    if (lum !== null && lum >= 140) {
+        return false;
+    }
+    if (lum !== null && lum < 90) {
+        return true;
+    }
+
+    return !!(
+        root &&
+        (root.classList.contains('react-dark') || root.classList.contains('react-blue'))
+    );
+}
+
+/** Steuert style.css für Klapp-Hilfen (react-dark-Klasse kann nach Theme-Wechsel hängen bleiben). */
+function syncMarkdownThemeMarker(adminIsDark) {
+    const root = document.querySelector('.adapter-container');
+    if (root) {
+        root.setAttribute('data-smartcontrol-md-theme', adminIsDark ? 'dark' : 'light');
+    }
+}
+
+function clearZeroMdStylesheetCache() {
+    if (!window.ZeroMd || !window.ZeroMd.cache) {
+        return;
+    }
+    Object.keys(window.ZeroMd.cache).forEach((key) => {
+        if (key.includes('github-markdown')) {
+            delete window.ZeroMd.cache[key];
+        }
+    });
+}
+
+/**
+ * zero-md lädt css-urls nur, wenn KEIN <template><style> gesetzt ist (siehe zero-md render).
+ */
+function applyZeroMdTheme(mdEl, adminIsDark) {
+    if (!mdEl) {
+        return;
+    }
+    const tpl = mdEl.querySelector('template');
+    if (tpl) {
+        const st = tpl.content.querySelector('style');
+        if (st) {
+            st.remove();
+        }
+    }
+    clearZeroMdStylesheetCache();
+    const themeTag = adminIsDark ? 'dark' : 'light';
+    const cssUrls = adminIsDark
+        ? [`https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown-dark.min.css?sc=${themeTag}`]
+        : [`https://cdn.jsdelivr.net/npm/github-markdown-css@5/github-markdown.min.css?sc=${themeTag}`];
+    mdEl.setAttribute('css-urls', JSON.stringify(cssUrls));
+
+    const onRendered = () => {
+        mdEl.removeEventListener('zero-md-rendered', onRendered);
+        if (!mdEl.shadowRoot) {
+            return;
+        }
+        mdEl.shadowRoot.querySelectorAll('style.smartcontrol-md-extra').forEach((el) => el.remove());
+        const extra = document.createElement('style');
+        extra.className = 'smartcontrol-md-extra';
+        extra.textContent = adminIsDark ? ZERO_MD_DARK_SHADOW_STYLE : ZERO_MD_LIGHT_SHADOW_STYLE;
+        mdEl.shadowRoot.appendChild(extra);
+    };
+    mdEl.addEventListener('zero-md-rendered', onRendered);
+}
+
+/** Zusatz-CSS im zero-md Shadow DOM, falls das GitHub-Dark-Sheet nicht alles trifft */
+const ZERO_MD_DARK_SHADOW_STYLE = `
+.markdown-body {
+    color-scheme: dark;
+    background-color: transparent !important;
+    color: #e6edf3 !important;
+}
+.markdown-body p,
+.markdown-body li,
+.markdown-body td,
+.markdown-body th {
+    color: #e6edf3 !important;
+}
+.markdown-body table tr {
+    background-color: transparent !important;
+}
+.markdown-body th {
+    background-color: #21262d !important;
+}
+.markdown-body a {
+    color: #58a6ff !important;
+}
+.markdown-body code {
+    background-color: rgba(110, 118, 129, 0.35) !important;
+    color: #e6edf3 !important;
+}
+`;
+
+/** Hellmodus: überschreibt auch Reste von github-markdown-dark (dunkle Tabellenzeilen) */
+const ZERO_MD_LIGHT_SHADOW_STYLE = `
+.markdown-body {
+    color-scheme: light;
+    background-color: #ffffff !important;
+    color: #1f2328 !important;
+}
+.markdown-body p,
+.markdown-body li,
+.markdown-body td,
+.markdown-body th,
+.markdown-body strong {
+    color: #1f2328 !important;
+}
+.markdown-body table,
+.markdown-body table tr,
+.markdown-body table td,
+.markdown-body table th {
+    background-color: #ffffff !important;
+    border-color: #d0d7de !important;
+}
+.markdown-body table tr:nth-child(2n) td {
+    background-color: #f6f8fa !important;
+}
+.markdown-body th {
+    background-color: #f6f8fa !important;
+}
+.markdown-body a {
+    color: #0969da !important;
+}
+.markdown-body code {
+    background-color: rgba(175, 184, 193, 0.2) !important;
+    color: #1f2328 !important;
+}
+`;
+
 function load2(settings, onChange) { 
     // Adapter Settings
     if (!settings) return;
@@ -95,7 +276,13 @@ function load2(settings, onChange) {
 
     // index_m.html: All ids defined in <zero-md> tags, like ['md-start', 'md-targetDevices', ...]
     const mdIds = $('zero-md[manual-render]').map((i, el) => el.getAttribute('id')).get(); // https://stackoverflow.com/a/54392415
+
+    const adminIsDark = isAdminDarkTheme();
+    syncMarkdownThemeMarker(adminIsDark);
+
     for (const mdId of mdIds) {
+        const mdEl = document.querySelector('zero-md#' + mdId);
+        applyZeroMdTheme(mdEl, adminIsDark);
 
         const mdFilePath = $('zero-md#' + mdId).attr('src'); // like 'doc-md/start_en.md'
         if (mdFilePath) {
@@ -121,13 +308,30 @@ function load2(settings, onChange) {
         }
 
         // Finally, render zero-md - https://github.com/zerodevx/zero-md#public-methods
-        // We add a slight delay, just in case
         setTimeout(() => {
             const el = document.querySelector('zero-md#' + mdId);
-            if(el) el.render();
+            if (el) {
+                applyZeroMdTheme(el, adminIsDark);
+                el.render();
+            }
         }, 100);
-
     }
+
+    // Hilfe neu rendern, wenn Klappbereich aufgeht (Materialize-Collapsible)
+    $('.collapsible').off('click.smartcontrolMd', '.collapsible-header').on(
+        'click.smartcontrolMd',
+        '.collapsible-header',
+        function () {
+            setTimeout(() => {
+                const dark = isAdminDarkTheme();
+                syncMarkdownThemeMarker(dark);
+                $(this).siblings('.collapsible-body').find('zero-md[manual-render]').each(function () {
+                    applyZeroMdTheme(this, dark);
+                    this.render();
+                });
+            }, 350);
+        },
+    );
 
     /**
      * tableTargetEnums: set enum room and function names to drop down (multiple select) fields

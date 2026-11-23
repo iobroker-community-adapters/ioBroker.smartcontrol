@@ -29,15 +29,66 @@
 .m .row .col.m1 { width: 14%; } 
 #tab-area { padding-left:0;padding-right:0; margin-top: 0px; margin-bottom: 1px; background-color:#174475; box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12), 0 3px 1px -2px rgba(0, 0, 0, 0.2) }
 
-/* Tabs menu react-dark */
-.m.react-dark .tabs .tab a.active, .m .tabs .tab a:hover { color: #2196f3; }
-.m.react-dark .tabs { background-color: #272727 !important;}
-.m.react-dark .md-import { background-color: #E0EBF3; color:yellow !important;}
+/* Tabs menu react-dark / react-blue */
+.m.react-dark .tabs .tab a.active,
+.m.react-blue .tabs .tab a.active,
+.m .tabs .tab a:hover {
+    color: #2196f3;
+}
+.m.react-dark .tabs,
+.m.react-blue .tabs {
+    background-color: #272727 !important;
+}
 
-/* Tabs menu react-blue */
-.m.react-blue .tabs .tab a.active, .m .tabs .tab a:hover { color: #2196f3; }
-.m.react-blue .tabs { background-color: #272727 !important;}
-.m.react-blue .md-import { background-color: #E0EBF3; color:yellow !important;}
+/* Hilfe (?): Theme über data-smartcontrol-md-theme (index_m.js), nicht nur react-dark (hängt oft fest) */
+.m[data-smartcontrol-md-theme="light"] .collapsible-body {
+    background-color: #fafafa !important;
+    color: rgba(0, 0, 0, 0.87) !important;
+}
+.m[data-smartcontrol-md-theme="light"] .collapsible-body p,
+.m[data-smartcontrol-md-theme="light"] .collapsible-body li,
+.m[data-smartcontrol-md-theme="light"] .collapsible-body ol {
+    color: rgba(0, 0, 0, 0.87) !important;
+}
+.m[data-smartcontrol-md-theme="light"] .collapsible-body td:nth-child(1) {
+    color: #0d47a1 !important;
+}
+.m[data-smartcontrol-md-theme="dark"] .collapsible-body,
+.m.react-dark .collapsible-body,
+.m.react-blue .collapsible-body {
+    background-color: #303030;
+    color: rgba(255, 255, 255, 0.87);
+}
+.m[data-smartcontrol-md-theme="dark"] .collapsible-body th,
+.m.react-dark .collapsible-body th,
+.m.react-blue .collapsible-body th {
+    background-color: #424242;
+    color: rgba(255, 255, 255, 0.87);
+}
+.m[data-smartcontrol-md-theme="dark"] .collapsible-body td:nth-child(1),
+.m.react-dark .collapsible-body td:nth-child(1),
+.m.react-blue .collapsible-body td:nth-child(1) {
+    color: #90caf9;
+}
+.m[data-smartcontrol-md-theme="dark"] .collapsible-body a:link,
+.m[data-smartcontrol-md-theme="dark"] .collapsible-body a:visited,
+.m.react-dark .collapsible-body a:link,
+.m.react-dark .collapsible-body a:visited,
+.m.react-blue .collapsible-body a:link,
+.m.react-blue .collapsible-body a:visited {
+    color: #64b5f6;
+}
+.m[data-smartcontrol-md-theme="dark"] .collapsible-body code,
+.m.react-dark .collapsible-body code,
+.m.react-blue .collapsible-body code {
+    color: #81d4fa;
+    background-color: rgba(255, 255, 255, 0.08);
+}
+.m[data-smartcontrol-md-theme="dark"] p.translation-required,
+.m.react-dark p.translation-required,
+.m.react-blue p.translation-required {
+    color: #90caf9;
+}
 
 /* Table header */
 table.table-values th.header { background-color:#64BfF6; font-size:90%; text-align:center; line-height: 1em; padding:6px 2px;}
@@ -86,6 +137,12 @@ code { padding: 2px 4px; font-size: 1.05em !important; color: #2696ef; backgroun
 .page a:visited { color:#2696ef; } /* visited link */
 .page a:hover { text-decoration: underline; } /* mouse over link */
 .page a:active { color: #0d47a1; } /* selected link */
+.m.react-dark .page a:link,
+.m.react-blue .page a:link,
+.m.react-dark .page a:visited,
+.m.react-blue .page a:visited {
+    color: #64b5f6;
+}
 
 /* ****** collapsible sections ****** */
 /* collapsible: general ****** */
@@ -100,6 +157,30 @@ code { padding: 2px 4px; font-size: 1.05em !important; color: #2696ef; backgroun
 .collapsible-body td:nth-child(1) { font-weight:normal; color: #0d47a1; width: 200px; } /* Format first column */
 .collapsible-body table {font-size: 1.0em;}
 .collapsible-body th {background-color: #c8e4fa69;}
+
+/* Dunkelmodus: helle Tabellenfarben oben überschreiben (nur bei md-theme=dark) */
+.m[data-smartcontrol-md-theme="dark"] .collapsible-body td:nth-child(1),
+.m.react-dark .collapsible-body td:nth-child(1),
+.m.react-blue .collapsible-body td:nth-child(1) {
+    color: #90caf9 !important;
+}
+.m[data-smartcontrol-md-theme="dark"] .collapsible-body th,
+.m.react-dark .collapsible-body th,
+.m.react-blue .collapsible-body th {
+    background-color: #424242 !important;
+    color: rgba(255, 255, 255, 0.87) !important;
+}
+.m[data-smartcontrol-md-theme="dark"] .collapsible-body p,
+.m[data-smartcontrol-md-theme="dark"] .collapsible-body li,
+.m[data-smartcontrol-md-theme="dark"] .collapsible-body ol,
+.m.react-dark .collapsible-body p,
+.m.react-blue .collapsible-body p,
+.m.react-dark .collapsible-body li,
+.m.react-blue .collapsible-body li,
+.m.react-dark .collapsible-body ol,
+.m.react-blue .collapsible-body ol {
+    color: rgba(255, 255, 255, 0.87);
+}
 
 /* collapsible: Config Table Header/Documentation ****** */
 .collapsible-header.config-section    { background-color: #174475 !important; }

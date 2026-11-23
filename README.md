@@ -81,6 +81,7 @@ We welcome contributions and collaboration from the community to continue enhanc
 -->
 
 ### **WORK IN PROGRESS**
+- (crunchip77) Admin: help markdown readable in light and dark ioBroker themes (fixes #5)
 - (copilot) Adapter requires node.js >= 22.19.0 now
 - (copilot) Adapter requires node.js >= 22 now
 - (iobroker-bot) Adapter requires node.js >= 20 now.

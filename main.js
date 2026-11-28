@@ -1241,7 +1241,7 @@ class SmartControl extends utils.Adapter {
                                 const lpIsOptional      = lpFcnConfigCheckObj.optional;
                                 const lpConfigTableName = functionConfigObj.tableName;
                                 
-                                const stateValueResult = await this._asyncVerifyConfig_verifyStateValue(lpStatePath, lpStateVal, lpIsOptional, lpConfigTableName, lpFcnConfigCheckObj.id);
+                                const stateValueResult = await this._asyncVerifyConfig_verifyStateValue(lpStatePath, lpStateVal, lpIsOptional, lpConfigTableName);
 
                                 if (stateValueResult.validationFailed) {
                                     if (lpFcnConfigCheckObj.deactivateIfError) {
@@ -1533,10 +1533,9 @@ class SmartControl extends utils.Adapter {
      * @param {*} stateVal
      * @param {boolean} isOptional 
      * @param {string} configTableName -- name of config table, for log only
-     * @param {string} [fieldId] -- config field, e.g. 'stateVal' or 'offValue' (empty boolean → true, offValue → false)
      * @return {Promise<object>}   {validationFailed:false, newStateVal:'xyz', issue:''}
      */
-    async _asyncVerifyConfig_verifyStateValue(statePath, stateVal, isOptional, configTableName, fieldId) {
+    async _asyncVerifyConfig_verifyStateValue(statePath, stateVal, isOptional, configTableName) {
 
         try {
 

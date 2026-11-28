@@ -55,6 +55,7 @@ class SmartControl extends utils.Adapter {
             timersZoneOff: {},    // for option "offAfter" in Zones table
             timersMimicMotionTrigger: {}, // for "motion linked trigger", to turn off after x sec if no motion
             timersZoneDeviceOnDelay: {}, // for Zones devices, target overwrite delay
+            timersMotionOff: {}, // motion off-timer once per zone (not per PIR), see #147
 
             // {object} schedules - All schedules (node-schedule)
             // NOTE: different level as in 'timers', key value holds the schedule object.
@@ -883,10 +884,8 @@ class SmartControl extends utils.Adapter {
                                 // Set "is Zone on" status to false since all target devices do have the 'off' state now.
                                 this.x.zonesIsOn[lpZoneRow.name] = false;
                                 
-                                // Cancel timers
-                                // NOTE: We cannot cancel trigger timer 'motionTimer' since it may also trigger other zones.
-                                // TODO: We should address motion timers as well.
-                                const timerObjIds = ['timersZoneOff', 'timersMimicMotionTrigger'];
+                                // Cancel timers (motion off is per zone, so it is safe to clear here — #147)
+                                const timerObjIds = ['timersZoneOff', 'timersMimicMotionTrigger', 'timersMotionOff'];
                                 let timerCounter = 0;
                                 for (const lpTimerObjId of timerObjIds) {
                                     const lpTimeLeft = this.x.helper.getTimeoutTimeLeft(this.x[lpTimerObjId][lpZoneRow.name]);
@@ -967,18 +966,8 @@ class SmartControl extends utils.Adapter {
                 'timersZoneOff': 'zone off-timer',
                 'timersMimicMotionTrigger': 'zone off-timer for linked trigger',
                 'timersZoneDeviceOnDelay': 'zone device on-timer',
+                'timersMotionOff': 'zone motion off-timer',
             });
-
-            // Motion timers
-            for (const triggerName in this.x.triggers) {
-                const timeLeft = this.x.helper.getTimeoutTimeLeft(this.x.triggers[triggerName].motionTimer);
-                if (timeLeft > -1) {
-                    this.x.helper.logExtendedInfo('Clearing currently running motion timer: ' + triggerName);
-                    clearTimeout(this.x.triggers[triggerName].motionTimer);
-                    this.x.triggers[triggerName].motionTimer = null;
-                    timeoutCounter++;
-                }
-            }
             this.log.info(`(${timeoutCounter}) timers were active and have been cleared...`);
 
             /**
@@ -1026,6 +1015,28 @@ class SmartControl extends utils.Adapter {
             }            
         }
         return timeoutCounter;
+    }
+
+    /**
+     * Bewegungs-Aus-Timer aller Zonen löschen, in denen dieser Melder vorkommt.
+     * Warum: Bewegung an BWM2 muss den von BWM1 gestarteten Zonen-Timer stoppen (#147).
+     * @param {string} triggerName
+     */
+    _clearMotionOffTimersForTrigger(triggerName) {
+        if (!this.config.tableZones) {
+            return;
+        }
+        for (const lpZoneRow of this.config.tableZones) {
+            if (!lpZoneRow || !lpZoneRow.active || !Array.isArray(lpZoneRow.triggers) || !lpZoneRow.triggers.includes(triggerName)) {
+                continue;
+            }
+            const timeLeft = this.x.helper.getTimeoutTimeLeft(this.x.timersMotionOff[lpZoneRow.name]);
+            if (timeLeft > -1) {
+                this.log.debug(`Clearing zone motion off-timer '${lpZoneRow.name}' (${(timeLeft / 1000).toFixed(0)}s left) because motion on '${triggerName}'.`);
+                clearTimeout(this.x.timersMotionOff[lpZoneRow.name]);
+                this.x.timersMotionOff[lpZoneRow.name] = null;
+            }
+        }
     }
 
 
@@ -1917,6 +1928,8 @@ class SmartControl extends utils.Adapter {
                      * Clear motion timer
                      */
                     if (trigger.mimicMotion || (trigger.triggerIsMotion && stateObject.val===true)) {
+                        // Zonen-Timer löschen, nicht nur den eigenen Melder: sonst läuft der Timer des anderen BWM weiter (#147)
+                        this._clearMotionOffTimersForTrigger(trigger.triggerName);
                         clearTimeout(trigger.motionTimer);
                         trigger.motionTimer = null;
                     }

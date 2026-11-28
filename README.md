@@ -81,6 +81,7 @@ We welcome contributions and collaboration from the community to continue enhanc
 -->
 
 ### **WORK IN PROGRESS**
+- (crunchip77) Motion off-timer once per zone, restart on last PIR (fixes #147)
 - (copilot) Adapter requires node.js >= 22.19.0 now
 - (copilot) Adapter requires node.js >= 22 now
 - (iobroker-bot) Adapter requires node.js >= 20 now.

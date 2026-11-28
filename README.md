@@ -81,6 +81,7 @@ We welcome contributions and collaboration from the community to continue enhanc
 -->
 
 ### **WORK IN PROGRESS**
+- (crunchip77) Number comparators accept negatives and decimals (`<-200`, `>26,5`) (fixes #164)
 - (copilot) Adapter requires node.js >= 22.19.0 now
 - (copilot) Adapter requires node.js >= 22 now
 - (iobroker-bot) Adapter requires node.js >= 20 now.

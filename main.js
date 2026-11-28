@@ -1570,9 +1570,8 @@ class SmartControl extends utils.Adapter {
                         return {validationFailed:false, newStateVal:stateVal};
                     }
                 } else if (stateType == 'number') {
-                    // We allow comparators '<', '>=' etc.
-                    const isComparator = (/^(>=|<=|>|<|!=|<>)\s?(\d{1,})$/.test(stateVal.trim()));
-                    if (isComparator) {
+                    // We allow comparators '<', '>=' etc. including negatives and decimals (#164)
+                    if (this.x.helper.parseNumComparator(stateVal).isComparator) {
                         return {validationFailed:false, newStateVal:stateVal};
                     } else if (this.x.helper.isNumber(stateVal)) {
                         return {validationFailed:false, newStateVal:parseFloat(stateVal)};

@@ -81,6 +81,7 @@ We welcome contributions and collaboration from the community to continue enhanc
 -->
 
 ### **WORK IN PROGRESS**
+- (crunchip77) Honour "Do not verify" for target off on timer timeout (fixes #7)
 - (copilot) Adapter requires node.js >= 22.19.0 now
 - (copilot) Adapter requires node.js >= 22 now
 - (iobroker-bot) Adapter requires node.js >= 20 now.

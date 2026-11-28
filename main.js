@@ -14,6 +14,7 @@
 
 // ioBroker Adapter core module
 const utils = require('@iobroker/adapter-core');
+const { MIDNIGHT_RESCHEDULE_DELAY_MS } = require('./lib/midnight-reschedule');
 
 /**
  * Main Adapter Class
@@ -61,7 +62,8 @@ class SmartControl extends utils.Adapter {
             schedules: {
                 midnight: null,
                 // more schedule keys added later, as key: name of row of tableTriggerTimes
-            }, 
+            },
+            midnightRescheduleTimer: null, // Delay nach 00:00, damit Nutzer-Cron `0 0 * * *` zuerst feuert (#8) 
 
             // Motion trigger should not set timeout if target device was turned on previously without a motion trigger.
             // Ref. https://forum.iobroker.net/post/433871 | https://forum.iobroker.net/post/437803
@@ -514,9 +516,16 @@ class SmartControl extends utils.Adapter {
              * This is required since we are supporting astro times (suncalc)
              */            
             this.x.schedules.midnight = this.x.mSchedule.scheduleJob('0 0 * * *', () => {
-                this._asyncOnReady_asyncScheduleTriggerTimes();
-                if (this.x.systemConfig.latitude && this.x.systemConfig.longitude) this._asyncOnReady_asyncRefreshAstroStates();
-                this.x.helper.logExtendedInfo(`Re-scheduling time triggers for updating astro times and updating 'info.astroTimes.' states.`);
+                // Nicht sofort re-schedulen: cancel() in derselben Sekunde verschluckt 00:00-Auslöser (#8).
+                if (this.x.midnightRescheduleTimer) {
+                    clearTimeout(this.x.midnightRescheduleTimer);
+                }
+                this.x.midnightRescheduleTimer = setTimeout(() => {
+                    this.x.midnightRescheduleTimer = null;
+                    this._asyncOnReady_asyncScheduleTriggerTimes();
+                    if (this.x.systemConfig.latitude && this.x.systemConfig.longitude) this._asyncOnReady_asyncRefreshAstroStates();
+                    this.x.helper.logExtendedInfo(`Re-scheduling time triggers for updating astro times and updating 'info.astroTimes.' states.`);
+                }, MIDNIGHT_RESCHEDULE_DELAY_MS);
             });
 
             this.log.info(`Subscribing to all target devices and trigger states. ${numTriggers} trigger schedules activated...`);
@@ -978,6 +987,11 @@ class SmartControl extends utils.Adapter {
                     this.x.triggers[triggerName].motionTimer = null;
                     timeoutCounter++;
                 }
+            }
+            if (this.x.midnightRescheduleTimer) {
+                clearTimeout(this.x.midnightRescheduleTimer);
+                this.x.midnightRescheduleTimer = null;
+                timeoutCounter++;
             }
             this.log.info(`(${timeoutCounter}) timers were active and have been cleared...`);
 

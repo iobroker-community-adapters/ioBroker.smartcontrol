@@ -1241,7 +1241,7 @@ class SmartControl extends utils.Adapter {
                                 const lpIsOptional      = lpFcnConfigCheckObj.optional;
                                 const lpConfigTableName = functionConfigObj.tableName;
                                 
-                                const stateValueResult = await this._asyncVerifyConfig_verifyStateValue(lpStatePath, lpStateVal, lpIsOptional, lpConfigTableName);
+                                const stateValueResult = await this._asyncVerifyConfig_verifyStateValue(lpStatePath, lpStateVal, lpIsOptional, lpConfigTableName, lpFcnConfigCheckObj.id);
 
                                 if (stateValueResult.validationFailed) {
                                     if (lpFcnConfigCheckObj.deactivateIfError) {
@@ -1533,17 +1533,23 @@ class SmartControl extends utils.Adapter {
      * @param {*} stateVal
      * @param {boolean} isOptional 
      * @param {string} configTableName -- name of config table, for log only
+     * @param {string} [fieldId] -- config field, e.g. 'stateVal' or 'offValue' (empty boolean → true, offValue → false)
      * @return {Promise<object>}   {validationFailed:false, newStateVal:'xyz', issue:''}
      */
-    async _asyncVerifyConfig_verifyStateValue(statePath, stateVal, isOptional, configTableName) {
+    async _asyncVerifyConfig_verifyStateValue(statePath, stateVal, isOptional, configTableName, fieldId) {
 
         try {
 
-            // Remove any brackets at beginning and end
-            stateVal = stateVal.toString().replace(/^(\[|"|'|`|´)([\s\S]*)(]|"|'|`|´)$/, '$2');
-
-            // Trim again
-            stateVal = stateVal.trim();
+            // Boolean already from a previous save – not a string
+            if (typeof stateVal !== 'boolean') {
+                if (stateVal == null) {
+                    stateVal = '';
+                } else {
+                    // Remove any brackets at beginning and end
+                    stateVal = stateVal.toString().replace(/^(\[|"|'|`|´)([\s\S]*)(]|"|'|`|´)$/, '$2');
+                    stateVal = stateVal.trim();
+                }
+            }
 
             if ( this.x.helper.isLikeEmpty(statePath.trim()) || (this.x.helper.isLikeEmpty(stateVal) && isOptional) ) {
                 // Skip if empty and if is optional. 
@@ -1562,13 +1568,13 @@ class SmartControl extends utils.Adapter {
                 const stateType = lpStateObject.common.type;
 
                 if (stateType == 'boolean' || stateType == 'switch') {
-                    if (stateVal != 'true' && stateVal != 'false') {
-                        return {validationFailed:true, issue:`[Config Table '${configTableName}'] State '${statePath}' is expecting boolean (true/false), but you set '${stateVal}'.`};
-                    } else {
-                        if (stateVal == 'true') stateVal = true;
-                        if (stateVal == 'false') stateVal = false;
-                        return {validationFailed:false, newStateVal:stateVal};
+                    // Leeres DP-Wert-Feld: Nutzer meint oft "ist doch boolean" (#170) → true, bei aus → false
+                    const emptyMeans = (fieldId === 'offValue') ? false : true;
+                    const parsed = this.x.helper.parseBooleanStateVal(stateVal, { emptyMeans });
+                    if (parsed.ok) {
+                        return {validationFailed:false, newStateVal:parsed.value};
                     }
+                    return {validationFailed:true, issue:`[Config Table '${configTableName}'] State '${statePath}' is boolean. Set the value column to true or false (you set '${stateVal}').`};
                 } else if (stateType == 'number') {
                     // We allow comparators '<', '>=' etc.
                     const isComparator = (/^(>=|<=|>|<|!=|<>)\s?(\d{1,})$/.test(stateVal.trim()));

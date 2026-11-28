@@ -1377,11 +1377,13 @@ class SmartControl extends utils.Adapter {
                             // +++++++ VALIDATION TYPE: time and timeCron +++++++
                             // -- We test for both "time" and "timeCron".
                             } else if (lpFcnConfigCheckObj.type.substring(0, 4) == 'time') {
-                                const lpToCheck = lpTable.table[i][lpFcnConfigCheckObj.id];
+                                // Textfeld, aber .trim() crasht wenn der Wert kein String ist
+                                const rawTime = lpTable.table[i][lpFcnConfigCheckObj.id];
+                                const lpToCheck = (rawTime == null) ? '' : String(rawTime);
                                 let isValidTime = false;
                                 if (this.x.helper.getTimeInfoFromAstroString(lpToCheck, false) ) {
                                     isValidTime = true;
-                                } else if (lpFcnConfigCheckObj.type == 'timeCron' && this.x.helper.isCronScheduleValid(lpToCheck.trim())) {
+                                } else if (lpFcnConfigCheckObj.type == 'timeCron' && this.x.helper.isCronScheduleValid(lpToCheck)) {
                                     isValidTime = true;
                                 }
                                 if (!isValidTime) {

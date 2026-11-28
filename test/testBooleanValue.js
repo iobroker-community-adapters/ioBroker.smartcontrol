@@ -14,11 +14,10 @@ describe('parseBooleanStateVal (#170)', () => {
         expect(parseBooleanStateVal(true).value).to.equal(true);
     });
 
-    it('leeres Feld: true, bei offValue false', () => {
-        expect(parseBooleanStateVal('', { emptyMeans: true }).value).to.equal(true);
-        expect(parseBooleanStateVal('   ', { emptyMeans: true }).value).to.equal(true);
-        expect(parseBooleanStateVal('', { emptyMeans: false }).value).to.equal(false);
+    it('leeres Feld bleibt ungültig (Vergleichswert ist Pflicht)', () => {
         expect(parseBooleanStateVal('').ok).to.equal(false);
+        expect(parseBooleanStateVal('   ').ok).to.equal(false);
+        expect(parseBooleanStateVal(null).ok).to.equal(false);
     });
 
     it('lehnt Unsinn ab', () => {

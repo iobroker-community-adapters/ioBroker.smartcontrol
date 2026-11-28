@@ -1568,13 +1568,11 @@ class SmartControl extends utils.Adapter {
                 const stateType = lpStateObject.common.type;
 
                 if (stateType == 'boolean' || stateType == 'switch') {
-                    // Leeres DP-Wert-Feld: Nutzer meint oft "ist doch boolean" (#170) → true, bei aus → false
-                    const emptyMeans = (fieldId === 'offValue') ? false : true;
-                    const parsed = this.x.helper.parseBooleanStateVal(stateVal, { emptyMeans });
+                    const parsed = this.x.helper.parseBooleanStateVal(stateVal);
                     if (parsed.ok) {
                         return {validationFailed:false, newStateVal:parsed.value};
                     }
-                    return {validationFailed:true, issue:`[Config Table '${configTableName}'] State '${statePath}' is boolean. Set the value column to true or false (you set '${stateVal}').`};
+                    return {validationFailed:true, issue:`[Config Table '${configTableName}'] State '${statePath}' is boolean. Enter true or false in the value column (comparison value); you set '${stateVal}'.`};
                 } else if (stateType == 'number') {
                     // We allow comparators '<', '>=' etc.
                     const isComparator = (/^(>=|<=|>|<|!=|<>)\s?(\d{1,})$/.test(stateVal.trim()));
